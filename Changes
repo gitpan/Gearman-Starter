@@ -1,5 +1,9 @@
 Revision history for Perl extension Gearman-Starter
 
+0.02 2014-01-06T10:15:46Z
+
+    - add missing shebang to gearman-starter.pl
+
 0.01 2014-01-06T09:48:08Z
 
     - original version
