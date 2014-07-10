@@ -3,7 +3,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = "0.02";
+our $VERSION = "0.03";
 
 use Gearman::Starter::Util;
 
@@ -21,7 +21,7 @@ use Parallel::Scoreboard;
 
 use Class::Accessor::Lite (
     new => 1,
-    ro => [qw/prefix port listen max_workers max_requests_per_child scoreboard_dir/],
+    ro => [qw/prefix port listen max_workers max_requests_per_child scoreboard_dir on_fail/],
     rw => [qw/start_time scoreboard jobs/],
 );
 
@@ -159,6 +159,7 @@ sub _run {
             on_complete => sub {
                 $self->scoreboard && $self->scoreboard->update( sprintf "%s %s", '_', $counter );
             },
+            ($self->on_fail ? (on_fail => $self->on_fail) : ()),
             stop_if => sub {
                 $counter >= $self->max_requests_per_child;
             }
@@ -279,6 +280,7 @@ Gearman::Starter - Gearman workers launcher with register functions
         scoreboard_dir         => $scoreboard_dir,         # optional
         port                   => 9999,                    # optional
         Reload                 => ['lib/MyWorker/Job.pm'], # optional
+        on_fail                => sub { ... },             # optional
     );
     $gearman_starter->run;
 
